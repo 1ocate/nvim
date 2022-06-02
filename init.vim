@@ -37,7 +37,7 @@ let g:airline_right_sep = ''
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1           " enable airline tabline                                                           
 
-"let base16colorspace=256  " Access colors present in 256 colorspace
+let base16colorspace=256  " Access colors present in 256 colorspace
 
 " AIRLINE SETTINGS
 let g:airline#extensions#tabline#show_close_button = 0
@@ -53,7 +53,7 @@ let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
 let g:airline#extensions#tabline#show_splits = 1
 let g:airline#extensions#wordcount#enabled = 0
-let g:airline_theme='base16_classic'
+let g:airline_theme='base16_horizon_dark'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tagbar#enabled = 1
 " END AIRLINE SETTINGS
