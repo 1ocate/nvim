@@ -12,11 +12,15 @@ call plug#end()
 
 " 스크롤 할때 구문강조 풀리는 문제 방지 
 autocmd BufEnter * syntax sync fromstart
+
+
 set nu!
-set expandtab
-set smartindent
-set tabstop=4
-set shiftwidth=4 
+set showmatch        " 일치하는 괄호 하이라이팅
+set cursorline       " highlight current line
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab
+autocmd FileType javascript setlocal ts=2 sts=2 sw=2 
+autocmd FileType typescriptreact setlocal ts=2 sts=2 sw=2
+set cindent autoindent smartindent
 
 "테마 변경
 let g:gruvbox_contrast_dark = 'hard'
@@ -25,18 +29,29 @@ set background=dark
 set termguicolors
 colorscheme gruvbox
 
-"nerdtree 단축키 설정
-nnoremap <leader>n :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
+" NERDTree 설정
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeIgnore = []
+let g:NERDTreeStatusline = ''
 
-"하단 바 관련 설정
+" Automaticaly close nvim if NERDTree is only thing left open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
+" NERDTree 단축키
+nnoremap <silent> <C-b> :NERDTreeToggle<CR>
+
+" Terminal
+set splitbelow
+command! -nargs=* T split | set nonu | resize 5 | term <args>
+" turn terminal to normal mode with escape
+tnoremap <Esc> <C-\><C-n>
+
+" 하단 바 관련 설정
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1           " enable airline tabline                                                           
-
 let base16colorspace=256  " Access colors present in 256 colorspace
 
 " AIRLINE SETTINGS
@@ -57,17 +72,7 @@ let g:airline_theme='base16_horizon_dark'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tagbar#enabled = 1
 " END AIRLINE SETTINGS
-"let g:airline#extensions#tabline#show_close_button = 0 " remove 'X' at the end of the tabline                                            
-"let g:airline#extensions#tabline#tabs_label = ''       " can put text here like BUFFERS to denote buffers (I clear it so nothing is shown)
-"let g:airline#extensions#tabline#buffers_label = ''    " can put text here like TABS to denote tabs (I clear it so nothing is shown)      
-"let g:airline#extensions#tabline#fnamemod = ':t'       " disable file paths in the tab                                                    
-"let g:airline#extensions#tabline#show_tab_count = 0    " dont show tab numbers on the right                                                           
-"let g:airline#extensions#tabline#show_buffers = 0      " dont show buffers in the tabline                                                 
-"let g:airline#extensions#tabline#tab_min_count = 2     " minimum of 2 tabs needed to display the tabline                                  
-"let g:airline#extensions#tabline#show_splits = 0       " disables the buffer name that displays on the right of the tabline               
-"let g:airline#extensions#tabline#show_tab_nr = 0       " disable tab numbers                                                              
-"let g:airline#extensions#tabline#show_tab_type = 0     " disables the weird ornage arrow on the tabline
-
+"
 " COC 관련 설정
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
 " unicode characters in the file autoload/float.vim
@@ -85,7 +90,7 @@ set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=300
+set updatetime=4000
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -190,15 +195,16 @@ xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
 
 " Remap <C-f> and <C-b> for scroll float windows/popups.
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-endif
 
+"if has('nvim-0.4.0') || has('patch-8.2.0750')
+"  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+"  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+"  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+"  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+"  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+"  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+"endif
+"
 " Use CTRL-S for selections ranges.
 " Requires 'textDocument/selectionRange' support of language server.
 nmap <silent> <C-s> <Plug>(coc-range-select)
