@@ -7,6 +7,10 @@ Plug 'mattn/emmet-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
+Plug 'easymotion/vim-easymotion'
+Plug 'junegunn/fzf', { 'dir': '~/opt/fzf' }
+Plug 'junegunn/fzf.vim'
+
 
 call plug#end()
 
@@ -41,6 +45,9 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " NERDTree 단축키
 nnoremap <silent> <C-b> :NERDTreeToggle<CR>
 
+" FZF 설정
+nnoremap <C-p> :Files<Cr>
+
 " Terminal
 set splitbelow
 command! -nargs=* T split | set nonu | resize 5 | term <args>
@@ -72,8 +79,51 @@ let g:airline_theme='base16_horizon_dark'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tagbar#enabled = 1
 " END AIRLINE SETTINGS
-"
-" COC 관련 설정
+
+" Easy motion
+let g:EasyMotion_do_mapping  = 0 " Disable default mappings
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
+let g:EasyMotion_smartcase = 1
+
+" 화면에 힌트키가 대문자로 표시되게 한다.
+let g:EasyMotion_keys = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890;'
+let g:EasyMotion_use_upper = 1
+
+nmap <c-s><c-s> <Plug>(easymotion-overwin-line)
+
+" INSERT 모드에서 입력하면 해당 라인 내에서 좌우로 이동 가능
+imap <c-s> <c-o><Plug>(easymotion-lineanywhere)
+
+nmap <c-s>2 <Plug>(easymotion-overwin-f2)
+
+nmap <c-s>l <Plug>(easymotion-lineforward)
+vmap <c-s>l <Plug>(easymotion-lineforward)
+nmap <c-s>j <Plug>(easymotion-j)
+vmap <c-s>j <Plug>(easymotion-j)
+nmap <c-s>k <Plug>(easymotion-k)
+vmap <c-s>k <Plug>(easymotion-k)
+nmap <c-s>h <Plug>(easymotion-linebackward)
+vmap <c-s>h <Plug>(easymotion-linebackward)
+
+nmap <c-s>a <Plug>(easymotion-jumptoanywhere)
+vmap <c-s>a <Plug>(easymotion-jumptoanywhere)
+
+nmap <c-s>w <Plug>(easymotion-overwin-w)
+nmap <c-s>f <Plug>(easymotion-overwin-f)
+
+nmap <c-s>/ <Plug>(easymotion-sn)
+
+" Smartsign (type `3` and match `3`&`#`)
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_use_smartsign_us = 1
+
+" vim-choosewin 설정
+"nmap <C-s>- <Plug>(choosewin)
+"let g:choosewin_overlay_enable = 1
+"let g:choosewin_label = 'ASDFQWERZXCV'
+
+"COC 관련 설정
+
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
 " unicode characters in the file autoload/float.vim
 set encoding=utf-8
@@ -207,8 +257,8 @@ omap ac <Plug>(coc-classobj-a)
 "
 " Use CTRL-S for selections ranges.
 " Requires 'textDocument/selectionRange' support of language server.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
+"nmap <silent> <C-s> <Plug>(coc-range-select)
+"xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocActionAsync('format')
