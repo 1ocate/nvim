@@ -7,6 +7,8 @@ Plug 'mattn/emmet-vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
@@ -29,6 +31,14 @@ set background=dark
 set termguicolors
 colorscheme gruvbox
 
+"EucKr 설정
+nnoremap <F7> :e ++enc=euc-kr<Cr>
+
+"FZF 설정
+let $FZF_DEFAULT_COMMAND='find . \! \( -type d -path ./.git -prune \) \! -type d \! -name ''*.tags'' -printf ''%P\n'''
+nnoremap <C-p> :Files<Cr>
+"nnoremap <S-S> :Files<Cr>
+
 " NERDTree 설정
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeMinimalUI = 1
@@ -39,7 +49,7 @@ let g:NERDTreeStatusline = ''
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " NERDTree 단축키
-nnoremap <silent> <C-b> :NERDTreeToggle<CR>
+nnoremap <silent> <C-b> :NERDTreeToggle <CR>
 
 " Terminal
 set splitbelow
@@ -64,7 +74,7 @@ let g:airline_detect_iminsert=1
 let g:airline#extensions#tmuxline#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_tabs = 1
-let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_buffers = 1
 let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
 let g:airline#extensions#tabline#show_splits = 1
 let g:airline#extensions#wordcount#enabled = 0
