@@ -12,6 +12,24 @@ Plug 'junegunn/fzf', { 'dir': '~/opt/fzf' }
 Plug 'junegunn/fzf.vim'
 
 call plug#end()
+nnoremap <F9>t :call <SID>toggle()<CR>
+
+let g:wsl_clipboard_enble = '' 
+function! s:toggle()
+" WSL에서 클립보드에 복사
+    let g:wsl_clipboard_enble = ! g:wsl_clipboard_enble
+    echom "숫자 레지스터 쉬프트 활성화 상태: " . g:wsl_clipboard_enble
+    let s:clip = ''
+    if v:true == g:wsl_clipboard_enble
+        let s:clip = '/mnt/c/Windows/System32/clip.exe' 
+        if executable(s:clip)
+            augroup WSLYank
+                autocmd!
+                autocmd TextYankPost * call system('echo '.shellescape(join(v:event.regcontents, "\<CR>")).' | '.s:clip)
+            augroup END
+        end
+    endif
+endfunction
 
 " 스크롤 할때 구문강조 풀리는 문제 방지 
 autocmd BufEnter * syntax sync fromstart
@@ -50,7 +68,7 @@ let g:NERDTreeStatusline = ''
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 " NERDTree 단축키
-nnoremap <silent> <C-b> :NERDTreeToggle <CR>
+nnoremap <silent> <C-b> :NERDTreeToggle %<CR>
 
 " Terminal
 set splitbelow
@@ -83,6 +101,27 @@ let g:airline_theme='base16_horizon_dark'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tagbar#enabled = 1
 " END AIRLINE SETTINGS
+"
+" 이 옵션은 버퍼를 수정한 직후 버퍼를 감춰지도록 한다.
+" 이 방법으로 버퍼를 사용하려면 거의 필수다.
+set hidden
+
+" 버퍼 새로 열기
+" 원래 이 단축키로 바인딩해 두었던 :tabnew를 대체한다.
+nmap <leader>T :enew<cr>
+
+" 다음 버퍼로 이동
+nmap <leader>l :bnext<CR>
+
+" 이전 버퍼로 이동
+nmap <leader>h :bprevious<CR>
+
+" 현재 버퍼를 닫고 이전 버퍼로 이동
+" 탭 닫기 단축키를 대체한다.
+nmap <leader>bq :bp <BAR> bd #<CR>
+
+" 모든 버퍼와 각 버퍼 상태 출력
+nmap <leader>bl :ls<CR>
 
 " Easy motion
 let g:EasyMotion_do_mapping  = 0 " Disable default mappings
