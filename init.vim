@@ -12,25 +12,42 @@ Plug 'junegunn/fzf', { 'dir': '~/opt/fzf' }
 Plug 'junegunn/fzf.vim'
 
 call plug#end()
-nnoremap <F9>t :call <SID>toggle()<CR>
+nnoremap <F9>t :call <SID>WSLYank_toggle()<CR>
 
-let g:wsl_clipboard_enble = '' 
-function! s:toggle()
 " WSL에서 클립보드에 복사
-    let g:wsl_clipboard_enble = ! g:wsl_clipboard_enble
-    echom "숫자 레지스터 쉬프트 활성화 상태: " . g:wsl_clipboard_enble
-    let s:clip = ''
-    if v:true == g:wsl_clipboard_enble
-        let s:clip = '/mnt/c/Windows/System32/clip.exe' 
-        if executable(s:clip)
-            augroup WSLYank
-                autocmd!
-                autocmd TextYankPost * call system('echo '.shellescape(join(v:event.regcontents, "\<CR>")).' | '.s:clip)
-            augroup END
-        end
-    endif
-endfunction
+augroup WSLYank_autocmd
 
+    " 초기화
+    let g:wsl_clipboard_enble = 1
+    let s:global_yank_cache_0 = @0
+    let s:clip = '/mnt/c/Windows/System32/clip.exe' 
+
+    if executable(s:clip)
+            autocmd TextYankPost * :call s:WSLYank()
+    end
+    
+    function! s:WSLYank_toggle()
+        let g:wsl_clipboard_enble = ! g:wsl_clipboard_enble
+        echom "시스템 클립보드 사용 여부 " . g:wsl_clipboard_enble
+        let s:clip = ''
+    endfunction
+
+    function! s:save_cache()
+        let s:global_yank_cache_0 = @0
+    endfunction
+
+    function! s:WSLYank()
+            if ! v:true == g:wsl_clipboard_enble
+                return
+            endif
+            if s:global_yank_cache_0 !=# @0
+                call system('echo '.shellescape(join(v:event.regcontents, "\<CR>")).' | '.s:clip)
+                call s:save_cache()
+                return
+            endif
+    endfunction
+
+augroup END
 " 스크롤 할때 구문강조 풀리는 문제 방지 
 autocmd BufEnter * syntax sync fromstart
 
@@ -169,7 +186,8 @@ let g:EasyMotion_use_smartsign_us = 1
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
 " unicode characters in the file autoload/float.vim
-set encoding=utf-8
+"set encoding=utf-8
+set fileencodings=utf-8,euc-kr
 
 " TextEdit might fail if hidden is not set.
 set hidden
