@@ -8,8 +8,10 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
 Plug 'easymotion/vim-easymotion'
+Plug 'ludovicchabant/vim-gutentags'
 Plug 'junegunn/fzf', { 'dir': '~/opt/fzf' }
 Plug 'junegunn/fzf.vim'
+
 
 call plug#end()
 nnoremap <F9>t :call <SID>WSLYank_toggle()<CR>
@@ -48,9 +50,12 @@ augroup WSLYank_autocmd
     endfunction
 
 augroup END
+
 " 스크롤 할때 구문강조 풀리는 문제 방지 
 autocmd BufEnter * syntax sync fromstart
 
+" gutentags 상태
+set statusline+=%{gutentags#statusline()}
 
 set nu!
 set showmatch        " 일치하는 괄호 하이라이팅
